@@ -36,7 +36,8 @@ public class TransactionController : ControllerBase
     }
 
     [HttpPost(Name = "RawBankTransaction")]
-    public async Task <IActionResult> AddContact([FromBody] RawBankTransaction rawBankTransaction) {
+    public async Task<IActionResult> AddContact([FromBody] RawBankTransaction rawBankTransaction)
+    {
         await _dbContext.RawBankTransactions.AddAsync(rawBankTransaction);
         await _dbContext.SaveChangesAsync();
         return Ok(rawBankTransaction.AccountNumber);
