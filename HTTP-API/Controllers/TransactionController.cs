@@ -21,25 +21,32 @@ public class TransactionController : ControllerBase
         _dbContext = dbContext;
     }
 
-    [HttpGet(Name = "BankTransaction")]
+    [HttpGet("api/BankTransaction/all")]
     public async Task<ActionResult> GetBankTransactionAsync()
     {
         var bankTransactions = await _dbContext.BankTransactions.ToListAsync();
+        _logger.LogInformation("Retrieved all bank transactions");
         return Ok(bankTransactions);
     }
 
-    [HttpGet(Name = "RawBankTransaction")]
+    [HttpGet("api/RawBankTransaction/all")]
     public async Task<ActionResult> GetRawBankTransactionAsync()
     {
         var rawBankTransactions = await _dbContext.RawBankTransactions.ToListAsync();
+        _logger.LogInformation("Retrieved all raw bank transactions");
         return Ok(rawBankTransactions);
     }
 
-    [HttpPost(Name = "RawBankTransaction")]
-    public async Task<IActionResult> AddContact([FromBody] RawBankTransaction rawBankTransaction)
+    [HttpPost("api/RawBankTransaction")]
+    public async Task<IActionResult> AddRawBankTransaction(
+        [FromBody] RawBankTransaction rawBankTransaction
+    )
     {
         await _dbContext.RawBankTransactions.AddAsync(rawBankTransaction);
         await _dbContext.SaveChangesAsync();
+        _logger.LogInformation(
+            "Added raw bank transaction: id = " + rawBankTransaction.Id.ToString()
+        );
         return Ok(rawBankTransaction.AccountNumber);
     }
 }
