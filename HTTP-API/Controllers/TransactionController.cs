@@ -63,4 +63,25 @@ public class TransactionController : ControllerBase
         );
         return NoContent();
     }
+
+    [HttpDelete("api/RawBankTransaction")]
+    public async Task<IActionResult> DeleteRawBankTransaction([FromQuery] Guid id)
+    {
+        var rawBankTransaction = await _dbContext.RawBankTransactions.FindAsync(id);
+
+        if (rawBankTransaction == null)
+        {
+            _logger.LogInformation(
+                "Could not find the raw bank transaction: id = " + id
+            );
+            return NotFound();
+        }
+
+        _dbContext.RawBankTransactions.Remove(rawBankTransaction);
+        await _dbContext.SaveChangesAsync();
+        _logger.LogInformation(
+            "Deleted the raw bank transaction: id = " + id
+        );
+        return NoContent();
+    }
 }
