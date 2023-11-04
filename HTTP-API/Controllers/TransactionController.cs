@@ -25,33 +25,49 @@ public class TransactionController : ControllerBase
     public async Task<ActionResult> GetBankTransactionAsync()
     {
         var bankTransactions = await _dbContext.BankTransactions.ToListAsync();
-        _logger.LogInformation("Retrieved all bank transactions");
+        _logger.LogInformation("Retrieved all of the bank transactions");
         return Ok(bankTransactions);
+    }
+
+    [HttpGet("api/BankTransaction")]
+    public async Task<ActionResult> GetSingleBankTransactionAsync([FromQuery] Guid id)
+    {
+        var bankTransaction = await _dbContext.BankTransactions.FindAsync(id);
+        _logger.LogInformation("Retrieved the bank transaction: id = " + id.ToString());
+        return Ok(bankTransaction);
     }
 
     [HttpGet("api/RawBankTransaction/all")]
     public async Task<ActionResult> GetRawBankTransactionAsync()
     {
         var rawBankTransactions = await _dbContext.RawBankTransactions.ToListAsync();
-        _logger.LogInformation("Retrieved all raw bank transactions");
+        _logger.LogInformation("Retrieved all of the raw bank transactions");
         return Ok(rawBankTransactions);
     }
 
+    [HttpGet("api/RawBankTransaction")]
+    public async Task<ActionResult> GetSingleRawBankTransactionAsync([FromQuery] Guid id)
+    {
+        var rawBankTransaction = await _dbContext.RawBankTransactions.FindAsync(id);
+        _logger.LogInformation("Retrieved raw bank transaction: id = " + id.ToString());
+        return Ok(rawBankTransaction);
+    }
+
     [HttpPost("api/RawBankTransaction")]
-    public async Task<IActionResult> AddRawBankTransaction(
+    public async Task<IActionResult> AddRawBankTransactionAsync(
         [FromBody] RawBankTransaction rawBankTransaction
     )
     {
         await _dbContext.RawBankTransactions.AddAsync(rawBankTransaction);
         await _dbContext.SaveChangesAsync();
         _logger.LogInformation(
-            "Added raw bank transaction: id = " + rawBankTransaction.Id.ToString()
+            "Added the raw bank transaction: id = " + rawBankTransaction.Id.ToString()
         );
         return Ok(rawBankTransaction.AccountNumber);
     }
 
     [HttpPut("api/RawBankTransaction")]
-    public async Task<IActionResult> UpdateRawBankTransaction(
+    public async Task<IActionResult> UpdateRawBankTransactionAsync(
         [FromBody] RawBankTransaction rawBankTransaction
     )
     {
@@ -59,29 +75,25 @@ public class TransactionController : ControllerBase
         _dbContext.Entry(rawBankTransaction).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
         _logger.LogInformation(
-            "Updated raw bank transaction: id = " + rawBankTransaction.Id.ToString()
+            "Updated the raw bank transaction: id = " + rawBankTransaction.Id.ToString()
         );
         return NoContent();
     }
 
     [HttpDelete("api/RawBankTransaction")]
-    public async Task<IActionResult> DeleteRawBankTransaction([FromQuery] Guid id)
+    public async Task<IActionResult> DeleteRawBankTransactionAsync([FromQuery] Guid id)
     {
         var rawBankTransaction = await _dbContext.RawBankTransactions.FindAsync(id);
 
         if (rawBankTransaction == null)
         {
-            _logger.LogInformation(
-                "Could not find the raw bank transaction: id = " + id
-            );
+            _logger.LogInformation("Could not find the raw bank transaction: id = " + id);
             return NotFound();
         }
 
         _dbContext.RawBankTransactions.Remove(rawBankTransaction);
         await _dbContext.SaveChangesAsync();
-        _logger.LogInformation(
-            "Deleted the raw bank transaction: id = " + id
-        );
+        _logger.LogInformation("Deleted the raw bank transaction: id = " + id);
         return NoContent();
     }
 }
