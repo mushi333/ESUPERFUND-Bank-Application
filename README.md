@@ -28,12 +28,13 @@ Follow these installation steps to run the application.
 1. Install the .NET Entity Framework CLI
 - ```dotnet tool install --global dotnet-ef```
 2. Update the appsettings.json file in the HTTP-API folder with your database connection string.
-3. Run these migration instructions to set up the database
+3. Change directory to the "HTTP-API" folder.
+4. Run these migration instructions to set up the database
 - ```dotnet ef migrations add Initialization```
 - ```dotnet ef database update```
-4. Run the following command to start the server. Go to your "localhost:PORT_NUMBER/index.html" URL to view the generated Swagger page.
+5. Run the following command to start the server. Go to your "localhost:PORT_NUMBER/index.html" URL to view the generated Swagger page.
 - ```dotnet run```
-5. Interact with the back-end application by using the Swagger page.
+6. Interact with the back-end application by using the Swagger page.
 
 ## Future Work
 These are the following future work that can enhance the application.
