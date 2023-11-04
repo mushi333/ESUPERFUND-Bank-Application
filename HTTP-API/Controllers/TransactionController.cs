@@ -49,4 +49,18 @@ public class TransactionController : ControllerBase
         );
         return Ok(rawBankTransaction.AccountNumber);
     }
+
+    [HttpPut("api/RawBankTransaction")]
+    public async Task<IActionResult> UpdateRawBankTransaction(
+        [FromBody] RawBankTransaction rawBankTransaction
+    )
+    {
+        _dbContext.RawBankTransactions.Any(r => r.Id == rawBankTransaction.Id);
+        _dbContext.Entry(rawBankTransaction).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
+        _logger.LogInformation(
+            "Updated raw bank transaction: id = " + rawBankTransaction.Id.ToString()
+        );
+        return NoContent();
+    }
 }
